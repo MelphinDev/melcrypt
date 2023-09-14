@@ -1,4 +1,4 @@
-function CRYPT() {
+function MELCRYPT() {
     const utils = {
         i2a: [
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -97,8 +97,8 @@ function CRYPT() {
                 var b0 = s[idx++] & 0xff;
                 var b1 = s[idx++] & 0xff;
                 result += (utils.i2a[b0 >> 2]);
-                result += (utils.i2a[(b0 << 4) & 0x3f | (b1 >>
-                    4)]);
+                result += (utils.i2a[(b0 << 4) & 0x3f |
+                           (b1 >> 4)]);
                 result += (utils.i2a[(b1 << 2) & 0x3f]);
                 result += ('=');
             } else if (remaining !== 0) {
@@ -201,38 +201,38 @@ function CRYPT() {
                     result[idx++] = 0x80 | (0x3F & (c >>> 6));
                     result[idx++] = 0x80 | (0x3F & (c >>> 0));
                 } else {
-                    throw "error";
+                    throw "error at str2uf8";
                 }
             }
             return result;
         },
         utf82str: function(data) {
-            var result = "",
-                length = data.length;
+            let result = "";
+            const length = data.length;
 
             for (var i = 0; i < length;) {
                 var c = data[i++];
                 if (c < 0x80) {
                     result += String.fromCharCode(c);
-                } else if ((c < 0xE0)) {
+                } else if (c < 0xE0) {
                     result += String.fromCharCode(
                         ((0x1F & c) << 6) |
                         ((0x3F & data[i++]) << 0)
                     );
-                } else if ((c < 0xF0)) {
+                } else if (c < 0xF0) {
                     result += String.fromCharCode(
                         ((0x0F & c) << 12) |
                         ((0x3F & data[i++]) << 6) |
                         ((0x3F & data[i++]) << 0)
                     );
-                } else if ((c < 0xF8)) {
+                } else if (c < 0xF8) {
                     result += String.fromCharCode(
                         ((0x07 & c) << 18) |
                         ((0x3F & data[i++]) << 12) |
                         ((0x3F & data[i++]) << 6) |
                         ((0x3F & data[i++]) << 0)
                     );
-                } else if ((c < 0xFC)) {
+                } else if (c < 0xFC) {
                     result += String.fromCharCode(
                         ((0x03 & c) << 24) |
                         ((0x3F & data[i++]) << 18) |
@@ -240,7 +240,7 @@ function CRYPT() {
                         ((0x3F & data[i++]) << 6) |
                         ((0x3F & data[i++]) << 0)
                     );
-                } else if ((c < 0xFE)) {
+                } else if (c < 0xFE) {
                     result += String.fromCharCode(
                         ((0x01 & c) << 30) |
                         ((0x3F & data[i++]) << 24) |
@@ -1583,13 +1583,13 @@ function CRYPT() {
 
             return res;
         },
-        enc: function(text, key, algo, encode) {
+        encrypt: function(text, key, algo, encode) {
             key = utils[encode + '_decode'](key);
             let cipher = Cipher.create(algo, "encrypt"),
                 res = cipher.execute(key, utils.str2utf8(text))
             return pack(utils[encode + '_encode'](res));
         },
-        dec: function(text, key, algo, encode) {
+        decrypt: function(text, key, algo, encode) {
 
             let cipher = Cipher.create(algo, "decrypt");
             return utils.utf82str(
@@ -1599,27 +1599,27 @@ function CRYPT() {
                 )
             )
         },
-        enc2x: function(text, key, algo, encode) {
-            let ctext = this.enc(text, key[0], algo[0], encode);
-            return this.enc(ctext, key[1], algo[1], encode)
+        encrypt2x: function(text, key, algo, encode) {
+            let ctext = this.encrypt(text, key[0], algo[0], encode);
+            return this.encrypt(ctext, key[1], algo[1], encode)
         },
-        enc3x: function(text, key, algo, encode) {
-            let ctext = this.enc(text, key[0], algo[0], encode);
-            ctext = this.enc(ctext, key[1], algo[1], encode)
-            return this.enc(ctext, key[2], algo[2], encode)
+        encrypt3x: function(text, key, algo, encode) {
+            let ctext = this.encrypt(text, key[0], algo[0], encode);
+            ctext = this.encrypt(ctext, key[1], algo[1], encode)
+            return this.encrypt(ctext, key[2], algo[2], encode)
         },
-        dec2x: function(text, key, algo, encode) {
+        decrypt2x: function(text, key, algo, encode) {
             key = key.reverse();
             algo = algo.reverse();
-            let ctext = this.dec(text, key[0], algo[0], encode);
-            return this.dec(ctext, key[1], algo[1], encode)
+            let ctext = this.decrypt(text, key[0], algo[0], encode);
+            return this.decrypt(ctext, key[1], algo[1], encode)
         },
-        dec3x: function(text, key, algo, encode) {
+        decrypt3x: function(text, key, algo, encode) {
             key = key.reverse();
             algo = algo.reverse();
-            let ctext = this.dec(text, key[0], algo[0], encode);
-            ctext = this.dec(ctext, key[1], algo[1], encode);
-            return this.dec(ctext, key[2], algo[2], encode)
+            let ctext = this.decrypt(text, key[0], algo[0], encode);
+            ctext = this.decrypt(ctext, key[1], algo[1], encode);
+            return this.decrypt(ctext, key[2], algo[2], encode)
         }
     }
 
