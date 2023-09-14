@@ -1,6 +1,8 @@
-# xcrypt
+# Melcrypt
 
-#### nodejs
+##  Usage
+
+#### Node.js
 
 ```js
 
@@ -8,7 +10,7 @@ const xcrypt = require('xcrypt');
 
 ```
 
-#### browser
+#### Bowser
 
 ```js
 import { xcrypt } from './dist/xcrypt.mjs';
