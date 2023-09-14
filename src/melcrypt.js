@@ -1,4 +1,4 @@
-function XCRYPT() {
+function CRYPT() {
     const utils = {
         i2a: [
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -1625,4 +1625,4 @@ function XCRYPT() {
 
 }
 
-const xcrypt = new XCRYPT();
+const melcrypt = new MELCRYPT();
